@@ -55,6 +55,7 @@ make lint
 
 - Use `make run` to run the controller locally against a kind cluster
 - Set `LOG_LEVEL=debug` for verbose output during development
+- Use `kind create cluster --name kumo-dev` to keep the dev cluster separate from others
 
 ## Contributing
 
