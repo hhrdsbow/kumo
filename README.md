@@ -1,475 +1,58 @@
-<p align="center">
-  <img src="assets/kumo.jpg" alt="kumo logo" width="480">
-  <br><br>
-  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/sivchari/kumo" alt="Go Version"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/sivchari/kumo" alt="License"></a>
-  <a href="https://github.com/sivchari/kumo/releases"><img src="https://img.shields.io/github/v/release/sivchari/kumo" alt="Release"></a>
-  <a href="https://github.com/sivchari/kumo/actions/workflows/lint.yaml"><img src="https://github.com/sivchari/kumo/actions/workflows/lint.yaml/badge.svg" alt="Lint"></a>
-  <a href="https://github.com/sivchari/kumo/actions/workflows/integration-test.yaml"><img src="https://github.com/sivchari/kumo/actions/workflows/integration-test.yaml/badge.svg" alt="Integration Tests"></a>
-</p>
+# kumo
 
-<p align="center">A lightweight AWS service emulator written in Go.<br>Works as both a CI/CD testing tool and a local development server with optional data persistence.</p>
+kumo is a Kubernetes controller that manages cloud resources.
 
-## Features
+> Fork of [sivchari/kumo](https://github.com/sivchari/kumo)
 
-- **No authentication required** - Perfect for CI environments
-- **Single binary** - Easy to distribute and deploy
-- **Docker support** - Run as a container
-- **Lightweight** - Fast startup, minimal resource usage
-- **AWS SDK v2 compatible** - Works seamlessly with Go AWS SDK v2
-- **Optional data persistence** - Survive restarts with `KUMO_DATA_DIR`
+## Prerequisites
 
-## Supported Services (75 services)
+- Go 1.21+
+- Kubernetes 1.27+
+- Helm 3.x
 
-### Storage
-| Service | Description |
-|---------|-------------|
-| S3 | Object storage |
-| S3 Control | S3 account-level operations |
-| S3 Tables | S3 table buckets |
-| DynamoDB | NoSQL database |
-| ElastiCache | In-memory caching |
-| MemoryDB | Redis-compatible database |
-| Glacier | Archive storage |
-| EBS | Block storage |
+## Installation
 
-### Compute
-| Service | Description |
-|---------|-------------|
-| Lambda | Serverless functions |
-| Batch | Batch computing |
-| EC2 | Virtual machines |
-| Elastic Beanstalk | Application deployment |
-
-### Container
-| Service | Description |
-|---------|-------------|
-| ECS | Container orchestration |
-| ECR | Container registry |
-| EKS | Kubernetes service |
-
-### Database
-| Service | Description |
-|---------|-------------|
-| RDS | Relational database service |
-| Neptune | Graph database |
-| Redshift | Data warehousing |
-
-### Messaging & Integration
-| Service | Description |
-|---------|-------------|
-| SQS | Message queuing |
-| SNS | Pub/Sub messaging |
-| EventBridge | Event bus |
-| Kinesis | Real-time streaming |
-| Firehose | Data delivery |
-| MQ | Message broker (ActiveMQ/RabbitMQ) |
-| Pipes | Event-driven integration |
-| MSK (Kafka) | Managed streaming for Kafka |
-
-### Security & Identity
-| Service | Description |
-|---------|-------------|
-| IAM | Identity and access management |
-| KMS | Key management |
-| Secrets Manager | Secret storage |
-| ACM | Certificate management |
-| Cognito | User authentication |
-| Security Lake | Security data lake |
-| STS | Security token service |
-| Macie | Data security and privacy |
-
-### Monitoring & Logging
-| Service | Description |
-|---------|-------------|
-| CloudWatch | Metrics and alarms |
-| CloudWatch Logs | Log management |
-| X-Ray | Distributed tracing |
-| CloudTrail | API audit logging |
-
-### Networking & Content Delivery
-| Service | Description |
-|---------|-------------|
-| CloudFront | CDN |
-| Global Accelerator | Network acceleration |
-| API Gateway | API management |
-| Route 53 | DNS service |
-| Route 53 Resolver | DNS resolver |
-| ELBv2 | Load balancing |
-| App Mesh | Service mesh |
-| Location | Location-based services |
-
-### Application Integration
-| Service | Description |
-|---------|-------------|
-| Step Functions | Workflow orchestration |
-| AppSync | GraphQL API |
-| SES v2 | Email service |
-| Scheduler | Task scheduling |
-| Amplify | Full-stack application hosting |
-
-### Management & Configuration
-| Service | Description |
-|---------|-------------|
-| SSM | Systems Manager |
-| Config | Resource configuration |
-| CloudFormation | Infrastructure as code |
-| Organizations | Multi-account management |
-| Service Quotas | Service limit management |
-| CodeConnections | Source code connections |
-| Backup | Centralized backup service |
-
-### Analytics & ML
-| Service | Description |
-|---------|-------------|
-| Athena | SQL query service |
-| Glue | ETL service |
-| Comprehend | NLP service |
-| Rekognition | Image/video analysis |
-| SageMaker | Machine learning |
-| Forecast | Time-series forecasting |
-| Data Exchange | Data marketplace |
-| Entity Resolution | Entity matching |
-
-### Developer Tools
-| Service | Description |
-|---------|-------------|
-| CodeGuru Profiler | Application profiling |
-| CodeGuru Reviewer | Automated code review |
-
-### Other Services
-| Service | Description |
-|---------|-------------|
-| Cost Explorer | Cost analysis |
-| DLM | Data lifecycle manager |
-| Directory Service | Microsoft AD |
-| EMR Serverless | Big data processing |
-| FinSpace | Financial data management |
-| GameLift | Game server hosting |
-| Resilience Hub | Application resilience |
-
-## Quick Start
-
-### Docker
+### Helm
 
 ```bash
-docker run -p 4566:4566 ghcr.io/sivchari/kumo:latest
-```
-
-With data persistence:
-
-```bash
-docker run -p 4566:4566 \
-  -e KUMO_DATA_DIR=/data \
-  -v kumo-data:/data \
-  ghcr.io/sivchari/kumo:latest
-```
-
-### Binary
-
-```bash
-# Build
-make build
-
-# Run
-./bin/kumo
-
-# Run with data persistence
-KUMO_DATA_DIR=./data ./bin/kumo
-```
-
-### Docker Compose
-
-```yaml
-services:
-  kumo:
-    image: ghcr.io/sivchari/kumo:latest
-    ports:
-      - "4566:4566"
-```
-
-With data persistence:
-
-```yaml
-services:
-  kumo:
-    image: ghcr.io/sivchari/kumo:latest
-    ports:
-      - "4566:4566"
-    environment:
-      - KUMO_DATA_DIR=/data
-    volumes:
-      - kumo-data:/data
-
-volumes:
-  kumo-data:
-```
-
-## Usage Examples
-
-### S3
-
-```go
-package main
-
-import (
-    "context"
-    "strings"
-
-    "github.com/aws/aws-sdk-go-v2/aws"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/credentials"
-    "github.com/aws/aws-sdk-go-v2/service/s3"
-)
-
-func main() {
-    cfg, _ := config.LoadDefaultConfig(context.TODO(),
-        config.WithRegion("us-east-1"),
-        config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test", "test", "")),
-    )
-
-    client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-        o.BaseEndpoint = aws.String("http://localhost:4566")
-        o.UsePathStyle = true
-    })
-
-    // Create bucket
-    client.CreateBucket(context.TODO(), &s3.CreateBucketInput{
-        Bucket: aws.String("my-bucket"),
-    })
-
-    // Put object
-    client.PutObject(context.TODO(), &s3.PutObjectInput{
-        Bucket: aws.String("my-bucket"),
-        Key:    aws.String("hello.txt"),
-        Body:   strings.NewReader("Hello, World!"),
-    })
-}
-```
-
-### SQS
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-
-    "github.com/aws/aws-sdk-go-v2/aws"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/credentials"
-    "github.com/aws/aws-sdk-go-v2/service/sqs"
-)
-
-func main() {
-    cfg, _ := config.LoadDefaultConfig(context.TODO(),
-        config.WithRegion("us-east-1"),
-        config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test", "test", "")),
-    )
-
-    client := sqs.NewFromConfig(cfg, func(o *sqs.Options) {
-        o.BaseEndpoint = aws.String("http://localhost:4566")
-    })
-
-    // Create queue
-    result, _ := client.CreateQueue(context.TODO(), &sqs.CreateQueueInput{
-        QueueName: aws.String("my-queue"),
-    })
-
-    // Send message
-    client.SendMessage(context.TODO(), &sqs.SendMessageInput{
-        QueueUrl:    result.QueueUrl,
-        MessageBody: aws.String("Hello from SQS!"),
-    })
-
-    // Receive message
-    messages, _ := client.ReceiveMessage(context.TODO(), &sqs.ReceiveMessageInput{
-        QueueUrl: result.QueueUrl,
-    })
-
-    for _, msg := range messages.Messages {
-        fmt.Println(*msg.Body)
-    }
-}
-```
-
-### DynamoDB
-
-```go
-package main
-
-import (
-    "context"
-
-    "github.com/aws/aws-sdk-go-v2/aws"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/credentials"
-    "github.com/aws/aws-sdk-go-v2/service/dynamodb"
-    "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-)
-
-func main() {
-    cfg, _ := config.LoadDefaultConfig(context.TODO(),
-        config.WithRegion("us-east-1"),
-        config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test", "test", "")),
-    )
-
-    client := dynamodb.NewFromConfig(cfg, func(o *dynamodb.Options) {
-        o.BaseEndpoint = aws.String("http://localhost:4566")
-    })
-
-    // Create table
-    client.CreateTable(context.TODO(), &dynamodb.CreateTableInput{
-        TableName: aws.String("users"),
-        KeySchema: []types.KeySchemaElement{
-            {AttributeName: aws.String("id"), KeyType: types.KeyTypeHash},
-        },
-        AttributeDefinitions: []types.AttributeDefinition{
-            {AttributeName: aws.String("id"), AttributeType: types.ScalarAttributeTypeS},
-        },
-        BillingMode: types.BillingModePayPerRequest,
-    })
-
-    // Put item
-    client.PutItem(context.TODO(), &dynamodb.PutItemInput{
-        TableName: aws.String("users"),
-        Item: map[string]types.AttributeValue{
-            "id":   &types.AttributeValueMemberS{Value: "user-1"},
-            "name": &types.AttributeValueMemberS{Value: "Alice"},
-        },
-    })
-}
-```
-
-### Secrets Manager
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-
-    "github.com/aws/aws-sdk-go-v2/aws"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/credentials"
-    "github.com/aws/aws-sdk-go-v2/service/secretsmanager"
-)
-
-func main() {
-    cfg, _ := config.LoadDefaultConfig(context.TODO(),
-        config.WithRegion("us-east-1"),
-        config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test", "test", "")),
-    )
-
-    client := secretsmanager.NewFromConfig(cfg, func(o *secretsmanager.Options) {
-        o.BaseEndpoint = aws.String("http://localhost:4566")
-    })
-
-    // Create secret
-    client.CreateSecret(context.TODO(), &secretsmanager.CreateSecretInput{
-        Name:         aws.String("my-secret"),
-        SecretString: aws.String(`{"username":"admin","password":"secret123"}`),
-    })
-
-    // Get secret
-    result, _ := client.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
-        SecretId: aws.String("my-secret"),
-    })
-
-    fmt.Println(*result.SecretString)
-}
-```
-
-## Configuration
-
-Environment variables:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `KUMO_HOST` | `0.0.0.0` | Server bind address |
-| `KUMO_PORT` | `4566` | Server port |
-| `KUMO_LOG_LEVEL` | `info` | Log level (debug, info, warn, error) |
-| `KUMO_DATA_DIR` | (unset) | Directory for persistent storage. When unset, data is in-memory only. |
-
-## Logging
-
-kumo logs all requests with structured fields. The log level controls the amount of detail:
-
-### INFO (default)
-
-Each request is logged with method, path, status, duration, and API action name:
-
-```
-level=INFO msg=request method=POST path=/ status=200 duration=61µs request_id=... target=secretsmanager.CreateSecret
-level=INFO msg=request method=PUT path=/my-bucket pattern=/{bucket} status=200 duration=30µs request_id=...
-```
-
-- `target` -- appears for JSON/Query protocol services (Secrets Manager, DynamoDB, SQS, etc.)
-- `action` -- appears for Query protocol services (EC2, SNS, etc.) when Action is in the URL query string
-
-### DEBUG
-
-In addition to INFO output, the full request body is logged:
-
-```
-level=DEBUG msg="request body" request_id=... body={"Name":"my-secret","SecretString":"..."}
-```
-
-Enable with:
-
-```bash
-KUMO_LOG_LEVEL=debug ./bin/kumo
-```
-
-## Data Persistence
-
-By default kumo runs as a pure in-memory emulator -- all data is lost when the process stops. This is ideal for CI/CD pipelines where each test run starts from a clean state.
-
-For local development, set `KUMO_DATA_DIR` to enable persistent storage:
-
-```bash
-KUMO_DATA_DIR=./data ./bin/kumo
-```
-
-When enabled:
-
-- On startup, each service loads its previous state from `$KUMO_DATA_DIR/{service}.json`.
-- On graceful shutdown (SIGTERM/SIGINT), each service saves its current state.
-- The data directory is created automatically if it does not exist.
-- Writes are atomic (tmp file + rename) to prevent corruption on crash.
-- Ephemeral state (SQS in-flight messages, S3 multipart uploads) is not persisted.
-
-```
-$KUMO_DATA_DIR/
-  s3.json
-  sqs.json
-  dynamodb.json
-  iam.json
-  ...
+helm install kumo ./charts/kumo \
+  --namespace kumo-system \
+  --create-namespace
 ```
 
 ## Development
 
+### Setup
+
 ```bash
-# Run tests
+git clone https://github.com/your-org/kumo.git
+cd kumo
+go mod download
+```
+
+### Running Tests
+
+```bash
+# Unit tests
 make test
 
-# Run integration tests
-make test-integration
+# Integration tests
+make integration-test
 
-# Lint
+# E2E tests (requires a running cluster)
+make e2e-test
+```
+
+### Linting
+
+```bash
 make lint
-
-# Build
-make build
 ```
 
 ## Contributing
 
-Contributions are welcome! Please see the issues for planned features and improvements.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
-MIT License
+Apache 2.0
