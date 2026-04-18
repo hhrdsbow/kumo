@@ -40,6 +40,7 @@ make test
 make integration-test
 
 # E2E tests (requires a running cluster)
+# Note: set KUBECONFIG env var before running
 make e2e-test
 ```
 
