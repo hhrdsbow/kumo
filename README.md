@@ -51,6 +51,11 @@ make e2e-test
 make lint
 ```
 
+### Local Development Tips
+
+- Use `make run` to run the controller locally against a kind cluster
+- Set `LOG_LEVEL=debug` for verbose output during development
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
