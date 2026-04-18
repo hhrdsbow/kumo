@@ -41,6 +41,7 @@ make integration-test
 
 # E2E tests (requires a running cluster)
 # Note: set KUBECONFIG env var before running
+# Tip: use `kind create cluster` for a quick local cluster
 make e2e-test
 ```
 
