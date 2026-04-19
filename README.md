@@ -63,6 +63,8 @@ make lint
 
 - I'm using this to learn controller-runtime patterns; the reconciler loop in `internal/controller/` is the main thing to study
 - `make run` requires the CRDs to be installed first: `make install` before `make run`
+- Useful shortcut: `make install run` chains both commands so I don't forget to install CRDs first
+- When iterating quickly, `make install run LOG_LEVEL=debug` is my go-to command
 
 ## Contributing
 
