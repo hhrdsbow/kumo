@@ -59,6 +59,11 @@ make lint
 - Use `kubectl logs -n kumo-system deploy/kumo -f` to tail controller logs in real time
 - Use `kubectl get events -n kumo-system --sort-by='.lastTimestamp'` to debug reconciliation issues
 
+### My Notes
+
+- I'm using this to learn controller-runtime patterns; the reconciler loop in `internal/controller/` is the main thing to study
+- `make run` requires the CRDs to be installed first: `make install` before `make run`
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
