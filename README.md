@@ -65,6 +65,7 @@ make lint
 - `make run` requires the CRDs to be installed first: `make install` before `make run`
 - Useful shortcut: `make install run` chains both commands so I don't forget to install CRDs first
 - When iterating quickly, `make install run LOG_LEVEL=debug` is my go-to command
+- To reset a stuck reconciliation loop, delete and re-apply the CR: `kubectl delete <cr> && kubectl apply -f <manifest>`
 
 ## Contributing
 
