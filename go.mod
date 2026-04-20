@@ -62,3 +62,5 @@ require (
 
 // forked from sivchari/kumo for personal learning and experimentation
 // TODO: explore replacing imdario/mergo with dario.cat/mergo (the maintained fork)
+// NOTE: imdario/mergo is effectively unmaintained; dario.cat/mergo is the successor
+//       tracked in: https://github.com/imdario/mergo/issues/220
