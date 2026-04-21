@@ -55,6 +55,8 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "kumo.io",
+		// Use a shorter renew deadline to detect leader loss faster during local testing
+		LeaderElectionRenewDeadline: func() *int64 { d := int64(5); return &d }(),
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
