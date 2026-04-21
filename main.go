@@ -39,7 +39,8 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 
 	opts := zap.Options{
-		Development: true,
+		// Disable development mode for cleaner JSON log output in my local setup
+		Development: false,
 	}
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
