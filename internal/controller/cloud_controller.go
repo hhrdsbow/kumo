@@ -59,7 +59,9 @@ func (r *CloudReconciler) reconcileCloud(ctx context.Context, cloud *kumov1alpha
 	// Update status to reflect current state
 	patch := client.MergeFrom(cloud.DeepCopy())
 	cloud.Status.Ready = true
-	cloud.Status.Message = fmt.Sprintf("Cloud provider %s is configured", cloud.Spec.Provider)
+	// Include the cloud name in the message to make it easier to identify in logs
+	// when multiple Cloud resources exist in the same cluster.
+	cloud.Status.Message = fmt.Sprintf("Cloud provider %s is configured (resource: %s)", cloud.Spec.Provider, cloud.Name)
 
 	if err := r.Status().Patch(ctx, cloud, patch); err != nil {
 		return fmt.Errorf("patching cloud status: %w", err)
